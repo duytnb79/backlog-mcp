@@ -1,6 +1,6 @@
 {
   "name": "@duytnb79/backlog-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Read-only Backlog MCP server",
   "type": "module",
   "bin": {
