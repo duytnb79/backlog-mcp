@@ -38,9 +38,17 @@ export function registerPullRequestTools(
     {
       title: "List pull requests",
       description: "List pull requests in a Backlog git repository.",
-      inputSchema: listPullRequestsSchema,
+      inputSchema: z.object(listPullRequestsSchema),
     },
-    async ({ projectIdOrKey, repoIdOrName, statusId, assigneeId, createdUserId, offset, count }: z.infer<z.ZodObject<typeof listPullRequestsSchema>>) => {
+    async ({
+      projectIdOrKey,
+      repoIdOrName,
+      statusId,
+      assigneeId,
+      createdUserId,
+      offset,
+      count,
+    }: z.infer<z.ZodObject<typeof listPullRequestsSchema>>) => {
       const pullRequests = await client.listPullRequests(projectIdOrKey, repoIdOrName, {
         statusId,
         assigneeId,
@@ -60,7 +68,7 @@ export function registerPullRequestTools(
     {
       title: "Get pull request",
       description: "Get Backlog pull request details.",
-      inputSchema: getPullRequestSchema,
+      inputSchema: z.object(getPullRequestSchema),
     },
     async ({ projectIdOrKey, repoIdOrName, pullRequestNumber }: z.infer<z.ZodObject<typeof getPullRequestSchema>>) => {
       const pullRequest = await client.getPullRequest(projectIdOrKey, repoIdOrName, pullRequestNumber);
@@ -75,9 +83,10 @@ export function registerPullRequestTools(
     {
       title: "Get pull request comments",
       description: "Get comments for a Backlog pull request.",
-      inputSchema: getPullRequestCommentsSchema,
+      inputSchema: z.object(getPullRequestCommentsSchema),
     },
     async ({ projectIdOrKey, repoIdOrName, pullRequestNumber, minId, maxId, count, order }: z.infer<z.ZodObject<typeof getPullRequestCommentsSchema>>) => {
+
       const comments = await client.getPullRequestComments(projectIdOrKey, repoIdOrName, pullRequestNumber, {
         minId,
         maxId,

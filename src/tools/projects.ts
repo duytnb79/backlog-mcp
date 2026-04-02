@@ -11,9 +11,10 @@ export function registerProjectTools(server: { registerTool: Function }, client:
     {
       title: "List projects",
       description: "List accessible Backlog projects.",
-      inputSchema: listProjectsSchema,
+      inputSchema: z.object(listProjectsSchema),
     },
     async ({ archived }: z.infer<z.ZodObject<typeof listProjectsSchema>>) => {
+
       const projects = await client.listProjects(archived);
       return {
         content: [{ type: "text", text: JSON.stringify({ projects }, null, 2) }],

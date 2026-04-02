@@ -11,7 +11,16 @@ export class BacklogApiError extends Error {
 
 export function toReadableError(error: unknown): string {
   if (error instanceof BacklogApiError) {
-    return error.message;
+    let message = error.message;
+    if (error.details) {
+      try {
+        const detailsString = JSON.stringify(error.details, null, 2);
+        message += ` (Details: ${detailsString})`;
+      } catch {
+        // Fallback if details cannot be stringified
+      }
+    }
+    return message;
   }
 
   if (error instanceof Error) {
@@ -20,3 +29,4 @@ export function toReadableError(error: unknown): string {
 
   return "Unknown error";
 }
+

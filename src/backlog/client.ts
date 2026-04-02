@@ -144,8 +144,12 @@ export class BacklogClient {
 
       if (!response.ok) {
         const details = await this.safeJson(response);
-        throw this.mapHttpError(response.status, details);
+        const redactedUrl = url.toString().replace(/apiKey=[^&]+/, "apiKey=***");
+        let error = this.mapHttpError(response.status, details);
+        error.message = `${error.message} (URL: ${redactedUrl})`;
+        throw error;
       }
+
 
       return await response.json();
     } catch (error) {
@@ -198,21 +202,38 @@ export class BacklogClient {
   }
 
   private mapHttpError(status: number, details: unknown): BacklogApiError {
+    let message: string;
     switch (status) {
       case 400:
-        return new BacklogApiError("Backlog rejected the request as invalid", status, details);
+        message = "Backlog rejected the request as invalid";
+        break;
       case 401:
       case 403:
-        return new BacklogApiError("Backlog authentication or permission failed", status, details);
+        message = "Backlog authentication or permission failed";
+        break;
       case 404:
-        return new BacklogApiError("Requested Backlog resource was not found", status, details);
+        message = "Requested Backlog resource was not found";
+        break;
       case 429:
-        return new BacklogApiError("Backlog rate limit exceeded", status, details);
+        message = "Backlog rate limit exceeded";
+        break;
       default:
         if (status >= 500) {
-          return new BacklogApiError("Backlog API returned a server error", status, details);
+          message = "Backlog API returned a server error";
+        } else {
+          message = `Backlog API request failed with status ${status}`;
         }
-        return new BacklogApiError(`Backlog API request failed with status ${status}`, status, details);
     }
+
+    if (details) {
+      try {
+        message += ` (Details: ${JSON.stringify(details)})`;
+      } catch {
+        // Skip details if stringification fails
+      }
+    }
+
+    return new BacklogApiError(message, status, details);
   }
+
 }

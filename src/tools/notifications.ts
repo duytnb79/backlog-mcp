@@ -23,7 +23,7 @@ export function registerNotificationTools(
     {
       title: "Get notifications",
       description: "Get recent Backlog notifications.",
-      inputSchema: getNotificationsSchema,
+      inputSchema: z.object(getNotificationsSchema),
     },
     async ({ minId, maxId, count, order }: z.infer<z.ZodObject<typeof getNotificationsSchema>>) => {
       const notifications = await client.getNotifications({
@@ -44,9 +44,10 @@ export function registerNotificationTools(
     {
       title: "Read notification",
       description: "Read full notification details.",
-      inputSchema: readNotificationSchema,
+      inputSchema: z.object(readNotificationSchema),
     },
     async ({ notificationId }: z.infer<z.ZodObject<typeof readNotificationSchema>>) => {
+
       const notification = await client.readNotification(notificationId);
       return {
         content: [{ type: "text", text: JSON.stringify({ notification }, null, 2) }],

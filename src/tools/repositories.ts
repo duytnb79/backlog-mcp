@@ -11,9 +11,10 @@ export function registerRepositoryTools(server: { registerTool: Function }, clie
     {
       title: "List repositories",
       description: "List repositories in a Backlog project.",
-      inputSchema: listRepositoriesSchema,
+      inputSchema: z.object(listRepositoriesSchema),
     },
     async ({ projectIdOrKey }: z.infer<z.ZodObject<typeof listRepositoriesSchema>>) => {
+
       const repositories = await client.listRepositories(projectIdOrKey);
       return {
         content: [{ type: "text", text: JSON.stringify({ repositories }, null, 2) }],

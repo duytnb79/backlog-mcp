@@ -11,9 +11,16 @@ const listIssuesSchema = {
   keyword: z.string().min(1).optional(),
   offset: z.number().int().nonnegative().optional(),
   count: z.number().int().positive().optional(),
-  sort: z.string().min(1).optional(),
-  order: z.enum(["asc", "desc"]).optional(),
+  sort: z
+    .string()
+    .min(1)
+    .describe(
+      "The item to sort the results by. Allowed values: summary, status, priority, updated, created, startDate, dueDate, estimatedHours, actualHours, childIssue",
+    )
+    .optional(),
+  order: z.enum(["asc", "desc"]).describe("The sort order (asc or desc)").optional(),
 };
+
 
 const getIssueSchema = {
   issueIdOrKey: z.string().min(1),
@@ -37,10 +44,11 @@ export function registerIssueTools(
     {
       title: "List issues",
       description: "List Backlog issues in accessible projects.",
-      inputSchema: listIssuesSchema,
+      inputSchema: z.object(listIssuesSchema),
     },
     async (input: z.infer<z.ZodObject<typeof listIssuesSchema>>) => {
       const issues = await client.listIssues({
+
         ...input,
         count: clampCount(input.count, maxPageSize),
       });
@@ -56,7 +64,7 @@ export function registerIssueTools(
     {
       title: "Get issue",
       description: "Get Backlog issue details.",
-      inputSchema: getIssueSchema,
+      inputSchema: z.object(getIssueSchema),
     },
     async ({ issueIdOrKey }: z.infer<z.ZodObject<typeof getIssueSchema>>) => {
       const issue = await client.getIssue(issueIdOrKey);
@@ -71,9 +79,10 @@ export function registerIssueTools(
     {
       title: "Get issue comments",
       description: "Get comments for a Backlog issue.",
-      inputSchema: getIssueCommentsSchema,
+      inputSchema: z.object(getIssueCommentsSchema),
     },
     async ({ issueIdOrKey, minId, maxId, count, order }: z.infer<z.ZodObject<typeof getIssueCommentsSchema>>) => {
+
       const comments = await client.getIssueComments(issueIdOrKey, {
         minId,
         maxId,
