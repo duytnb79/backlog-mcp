@@ -13,7 +13,7 @@ const config = loadConfig();
 const client = new BacklogClient(config);
 
 const server = new McpServer({
-  name: "@tamaki_diz/backlog-mcp",
+  name: "@duytnb79/backlog-mcp",
   version: "0.1.0",
 });
 

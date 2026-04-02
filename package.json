@@ -1,5 +1,5 @@
 {
-  "name": "@tamaki_diz/backlog-mcp",
+  "name": "@duytnb79/backlog-mcp",
   "version": "0.1.0",
   "description": "Read-only Backlog MCP server",
   "type": "module",
