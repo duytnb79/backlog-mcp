@@ -31,14 +31,16 @@ backlog-mcp
 
 ## Configuration
 
-Set these environment variables before starting the server:
+Create a `.env` file or set environment variables before starting the server:
 
 ```bash
-export BACKLOG_BASE_URL="https://your-space.backlog.com"
-export BACKLOG_API_KEY="your_backlog_api_key"
-export BACKLOG_TIMEOUT_MS="10000"
-export BACKLOG_MAX_PAGE_SIZE="100"
+BACKLOG_BASE_URL="https://your-space.backlog.com"
+BACKLOG_API_KEY="your_backlog_api_key"
+BACKLOG_TIMEOUT_MS="10000"
+BACKLOG_MAX_PAGE_SIZE="100"
 ```
+
+The server automatically loads `.env` when running locally.
 
 Required:
 - `BACKLOG_BASE_URL`
@@ -72,6 +74,7 @@ Optional:
 ```bash
 npm install
 npm run build
+cp .env.example .env
 node dist/index.js
 ```
 
